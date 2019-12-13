@@ -62,3 +62,12 @@ W7I2_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I3_trimmed_unaligned_RFAM_RNACentral.fastq \
 --genomefile chr_A_B_unassigned.fasta --outdir ${outpath}Rust_smRNA_PredictionsShortStack
 ```
+
+##### Prediction of repeats in rust using RepeatModeler 1.0.11 and Repeatmasker 4.0.6 
+```
+BuildDatabase -name chr_A  chr_A.fasta
+RepeatModeler -pa 8 -database chr_A
+BuildDatabase -name chr_B chr_B.fasta
+RepeatModeler -pa 8 -database chr_B
+```
+##### Remove TEs from proteome with Blast+ 2.9.0 and following the procedure in https://blaxter-lab-documentation.readthedocs.io/en/latest/filter-repeatmodeler-library.html. This resulted in filtered RepeatModeler files RepeatModeler_ChrsA_consensi.fa.classified and RepeatModeler_ChrsB_consensi.fa.classified
