@@ -83,3 +83,32 @@ RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsA/PGT_Repeats.f
 cat RepeatModeler_ChrsB_consensi.fa.classified repeatmasker.eukaryotes.fa > ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta
 RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta -dir ${outpath}RepeatMasker_RepeatModeler_ChrsB -xsmall -pa 8 /datastore/spe12g/Pgt_21_0_Data/chromosomes/chr_B.fasta
 ```
+
+##### Genomic origins of sRNAs with bedtools 2.28.0
+```
+# Turn the gene annotation file into bed file format
+awk -F'\t' -v OFS='\t' 'NR>=2{ if ($3 == "gene") { print } }' Puccinia_graminis_tritici_21-0.gff3 | awk '{print $1 "\t" $4 "\t" $5 "\t" $9 "\t" 0 "\t" $7}' > Puccinia_graminis_tritici_21-0.bed
+sortBed -i Puccinia_graminis_tritici_21-0.bed > Puccinia_graminis_tritici_21-0.sorted.bed
+
+# Turn the repeat annotation file from RepeatMasker into bed file format
+cat chr_A_B.fasta.out | awk '{print $5 "\t" $6 "\t" $7 "\t" $10 "\t" $11}' > chr_A_B.fasta.out.bed
+awk -F'\t' -v OFS='\t' 'NR>=3{sub(/_/, "", $1)} 1' chr_A_B.fasta.out.bed | tail -n+4 > f1.txt
+sortBed -i f1.txt > chr_A_B.fasta.out.sorted.bed
+rm f1.txt
+
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_up_late_infection_repeats_overlapping.bed
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
+
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_upSpores_repeats_overlapping.bed
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
+
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_up_early_infection_repeats_overlapping.bed
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
+
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_noDE_repeats_overlapping.bed
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
+bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
+```
