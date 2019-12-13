@@ -63,7 +63,7 @@ W7I3_trimmed_unaligned_RFAM_RNACentral.fastq \
 --genomefile chr_A_B_unassigned.fasta --outdir ${outpath}Rust_smRNA_PredictionsShortStack
 ```
 
-##### Prediction of repeats in rust using RepeatModeler 1.0.11 and Repeatmasker 4.0.6 
+##### Prediction of repeats in rust using RepeatModeler 1.0.11 
 ```
 BuildDatabase -name chr_A  chr_A.fasta
 RepeatModeler -pa 8 -database chr_A
@@ -71,3 +71,15 @@ BuildDatabase -name chr_B chr_B.fasta
 RepeatModeler -pa 8 -database chr_B
 ```
 ##### Remove TEs from proteome with Blast+ 2.9.0 and following the procedure in https://blaxter-lab-documentation.readthedocs.io/en/latest/filter-repeatmodeler-library.html. This resulted in filtered RepeatModeler files RepeatModeler_ChrsA_consensi.fa.classified and RepeatModeler_ChrsB_consensi.fa.classified
+
+##### RepeatMasking with Repeatmasker 4.0.6 
+```
+cp /apps/repeatmasker/4.0.6/Libraries/RepeatMaskerLib.embl ${outpath}RepeatMasker_RepeatModeler_ChrsA
+/apps/repeatmasker/4.0.6/util/buildRMLibFromEMBL.pl ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.embl > ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.fasta
+
+cat RepeatModeler_ChrsA_consensi.fa.classified ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.fasta > ${outpath}RepeatMasker_RepeatModeler_ChrsA/PGT_Repeats.fasta
+RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsA/PGT_Repeats.fasta -dir ${outpath}RepeatMasker_RepeatModeler_ChrsA -xsmall -pa 8 /datastore/spe12g/Pgt_21_0_Data/chromosomes/chr_A.fasta
+
+cat RepeatModeler_ChrsB_consensi.fa.classified repeatmasker.eukaryotes.fa > ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta
+RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta -dir ${outpath}RepeatMasker_RepeatModeler_ChrsB -xsmall -pa 8 /datastore/spe12g/Pgt_21_0_Data/chromosomes/chr_B.fasta
+```
