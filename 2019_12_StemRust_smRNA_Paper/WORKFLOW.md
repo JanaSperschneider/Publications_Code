@@ -63,6 +63,33 @@ W7I3_trimmed_unaligned_RFAM_RNACentral.fastq \
 --genomefile chr_A_B_unassigned.fasta --outdir ${outpath}Rust_smRNA_PredictionsShortStack
 ```
 
+##### Extract predicted siRNAs and miRNAs from ShortStack output files, get their composition and save their read counts for differential expression analysis later
+```
+cd Scripts
+python ShortStack_to_Fasta.py ${outpath}Rust_smRNA_PredictionsShortStack/Results.txt
+python ShortStack_to_Fasta.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results.txt
+
+python Uracil_5Prime.py ${outpath}Rust_smRNA_PredictionsShortStack/Results_siRNAs.fasta
+python Uracil_5Prime.py ${outpath}Rust_smRNA_PredictionsShortStack/Results_miRNAs.fasta
+
+python Uracil_5Prime.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results_siRNAs.fasta
+python Uracil_5Prime.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results_miRNAs.fasta
+
+python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Rust_smRNA_PredictionsShortStack/Results.txt
+python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results.txt
+cd ../
+```
+
+##### Differential expression analysis of rust and wheat sRNAs
+```
+EdgeR_Rust/Expression_smRNAs.R
+EdgeR_Wheat/Expression_smRNAs.R
+cd Scripts
+python ShortStack_EdgeR_Rust.py ${outpath}
+python ShortStack_EdgeR_Wheat.py ${outpath}
+cd ../
+```
+
 ##### Prediction of repeats in rust using RepeatModeler 1.0.11 
 ```
 BuildDatabase -name chr_A  chr_A.fasta
