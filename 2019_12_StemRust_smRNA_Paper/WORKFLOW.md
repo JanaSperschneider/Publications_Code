@@ -171,6 +171,16 @@ bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b Puc
 cat smRNAs_noDE_genes_overlapping.bed | awk '{print $7}' | uniq | sed 's/ID=//g' | cut -d ';' -f1 > smRNAs_noDE_genes_overlapping.gene.IDs
 ```
 
+##### Analysis of homologous sRNA loci in rust
+```
+cd Scripts
+python Homologous_sRNAs.py smRNAs_upSpores.fasta
+python Homologous_sRNAs.py smRNAs_up_early_infection.fasta
+python Homologous_sRNAs.py smRNAs_up_late_infection.fasta
+python Homologous_sRNAs.py smRNAs_noDE.fasta
+cd ../
+```
+
 ##### Figure 9: TEs targeted by sRNAs are associated with reduced expression of overlapping genes using bowtie 1.1.2
 ```
 bowtie -f -v0 -a --best --strata --sam chr_A_B_unassigned ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sam
