@@ -181,6 +181,18 @@ python Homologous_sRNAs.py smRNAs_noDE.fasta
 cd ../
 ```
 
+##### Get the chromosome locations for the sRNAs, so that they can be plotted onto the chromosomes (used in Figures 6 and 8)
+```
+cd Scripts
+python KaryplotR_Repeats.py
+python KaryplotR_Genes.py
+python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_up_early_infection.fasta
+python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta
+python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_upSpores.fasta
+python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_noDE.fasta
+cd ../
+```
+
 ##### Figure 9: TEs targeted by sRNAs are associated with reduced expression of overlapping genes using bowtie 1.1.2
 ```
 bowtie -f -v0 -a --best --strata --sam chr_A_B_unassigned ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sam
