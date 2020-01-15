@@ -26,7 +26,7 @@ for line in genecontent[1:]:
 
 f.close()
 # -----------------------------------------------------------------------------------------------------------
-f = open('../StemRust_InfectionTimeCourse_AGO_GeneModel_Fixed/Tx2_Abundance.txt', 'r')
+f = open('../Tx2_Abundance.txt', 'r')
 content = f.readlines()
 f.close()
 
