@@ -46,7 +46,6 @@ library(gridExtra)
 library(reshape2)
 library(directlabels)
 #---------------------------------
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Centromere_Figure/")
 #---------------------------------
 df <- read.delim('Centromere_Repeats.txt', sep="\t")
 head(df)
