@@ -42,17 +42,9 @@ scale_colour_Publication <- function(...){
   
 }
 #################################################################################################################################################################
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#  install.packages("BiocManager")
-
-#BiocManager::install("karyoploteR")
-#BiocManager::install("GenomicFeatures")
-
 library(karyoploteR)
 library(GenomicFeatures)
 set.seed(42)
-########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figure8_A/")
 ########################################################
 ########################################################
 # Read in the data
@@ -250,35 +242,4 @@ for (x in c("1A","1B","2A","2B","3A","3B","4A","4B","5A","5B","6A","6B","7A","7B
   
   dev.off()
 }
-########################################################
-########################################################
-png("Chromosome14.png", height = 10, width = 20, units = 'in', res = 300)
-
-kp <- plotKaryotype(genome = custom.genome, plot.type=2, chromosomes = c("chr14A", "chr14B"))#, zoom=zoom.region)
-kpAddBaseNumbers(kp, tick.dist=500000, tick.len=5, add.units=TRUE, digits=2, minor.ticks=TRUE, 
-                 minor.tick.dist=100000, minor.tick.len=2,  cex=1, tick.col=NULL, minor.tick.col=NULL, clipping=TRUE)
-
-kpDataBackground(kp, data.panel = 1)
-kp <- kpPlotBAMDensity(kp, data=bamGS, window.size=20000, normalize=TRUE, data.panel=1, r0=0, r1=0.45, col="darkgreen")
-kp <- kpPlotBAMDensity(kp, data=bamWI7, window.size=20000, normalize=TRUE, data.panel=1, r0=0.5, r1=0.95, col="darkred")
-kpText(kp, chr="chr14A", x=0, y=0.225, data.panel = 1, col="darkgreen", label="sRNA read density\n(germinated spores)", cex=1.2, pos=2)
-kpText(kp, chr="chr14A", x=0, y=0.725, data.panel = 1, col="darkred", label="sRNA read density\n(7 dpi)", cex=1.2, pos=2)
-kpText(kp, chr="chr14B", x=0, y=0.225, data.panel = 1, col="darkgreen", label="sRNA read density\n(germinated spores)", cex=1.2, pos=2)
-kpText(kp, chr="chr14B", x=0, y=0.725, data.panel = 1, col="darkred", label="sRNA read density\n(7 dpi)", cex=1.2, pos=2)
-
-kpText(kp, chr=seqlevels(kp$genome), y=0.0, x=0, col="black", label="Genes", data.panel="ideogram", r0=0.75, pos=2)
-kpPlotDensity(kp, all.genes.expressed, window.size = 20000, data.panel="ideogram", col="#67a9cf", border="#67a9cf", r0=0.5, r1=1)
-kpText(kp, chr=seqlevels(kp$genome), y=0.0, x=0, col="black", label="Repeats", data.panel="ideogram", r0=0.25, pos=2)
-kpPlotDensity(kp, data = repeats, window.size = 20000, data.panel="ideogram", col="#ef8a62", border="#ef8a62", r0=0.5, r1=0)
-
-kpText(kp, chr=seqlevels(kp$genome), y=0.0, x=0, data.panel = 2, r0=0.125, col="black", label="LTR/Gypsys", cex=1.2, pos=2)
-kpPlotDensity(kp, data = gypsys, window.size = 20000, col="darkgray", data.panel = 2, r0=0.25, r1=0)
-
-kpText(kp, chr=seqlevels(kp$genome), y=0.0, x=0, data.panel = 2, r0=0.375, col="black", label="DNA transposons", cex=1.2, pos=2)
-kpPlotDensity(kp, data = DNAs, window.size = 20000, col="darkgray", data.panel = 2, r0=0.5, r1=0.25)
-
-kpPlotMarkers(kp, data=genes_of_interest, labels=genes_of_interest$gene, label.color = "#333333", r1=1.5)
-
-kpPlotMarkers(kp, data=centromeres, labels=centromeres$labels, label.color = "#333333", r1=1.5)
-dev.off()
 ########################################################
