@@ -26,7 +26,7 @@ done
 
 ##### Run ShortStack 3.8.5 for rust and wheat
 ```
-ShortStack --bowtie_m 100 --bowtie_cores 4 --readfile G1_trimmed_unaligned_RFAM_RNACentral.fastq \
+ShortStack --bowtie_m all --bowtie_cores 4 --readfile G1_trimmed_unaligned_RFAM_RNACentral.fastq \
 G2_trimmed_unaligned_RFAM_RNACentral.fastq \
 G3_trimmed_unaligned_RFAM_RNACentral.fastq \
 U1_trimmed_unaligned_RFAM_RNACentral.fastq \
@@ -42,9 +42,9 @@ W5I3_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I1_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I2_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I3_trimmed_unaligned_RFAM_RNACentral.fastq \
---genomefile WheatGenome/iwgsc_refseqv1.0_all_chromosomes/161010_Chinese_Spring_v1.0_pseudomolecules_parts.fasta --outdir ${outpath}Wheat_smRNA_PredictionsShortStack
+--genomefile WheatGenome/iwgsc_refseqv1.0_all_chromosomes/161010_Chinese_Spring_v1.0_pseudomolecules_parts.fasta --outdir ${outpath}Wheat_smRNA_Predictions_ShortStack
 
-ShortStack --bowtie_m 100 --bowtie_cores 4 --readfile G1_trimmed_unaligned_RFAM_RNACentral.fastq \
+ShortStack --bowtie_m all --bowtie_cores 4 --readfile G1_trimmed_unaligned_RFAM_RNACentral.fastq \
 G2_trimmed_unaligned_RFAM_RNACentral.fastq \
 G3_trimmed_unaligned_RFAM_RNACentral.fastq \
 U1_trimmed_unaligned_RFAM_RNACentral.fastq \
@@ -60,23 +60,23 @@ W5I3_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I1_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I2_trimmed_unaligned_RFAM_RNACentral.fastq \
 W7I3_trimmed_unaligned_RFAM_RNACentral.fastq \
---genomefile chr_A_B_unassigned.fasta --outdir ${outpath}Rust_smRNA_PredictionsShortStack
+--genomefile chr_A_B_unassigned.fasta --outdir ${outpath}Rust_smRNA_Predictions_ShortStack
 ```
 
 ##### Extract predicted siRNAs and miRNAs from ShortStack output files, get their composition and save their read counts for differential expression analysis later
 ```
 cd Scripts
-python ShortStack_to_Fasta.py ${outpath}Rust_smRNA_PredictionsShortStack/Results.txt
-python ShortStack_to_Fasta.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results.txt
+python ShortStack_to_Fasta.py ${outpath}Rust_smRNA_Predictions_ShortStack/Results.txt
+python ShortStack_to_Fasta.py ${outpath}Rust_smRNA_Predictions_ShortStack/Results.txt
 
-python Uracil_5Prime.py ${outpath}Rust_smRNA_PredictionsShortStack/Results_siRNAs.fasta
-python Uracil_5Prime.py ${outpath}Rust_smRNA_PredictionsShortStack/Results_miRNAs.fasta
+python Uracil_5Prime.py ${outpath}Rust_smRNA_Predictions_ShortStack/Results_siRNAs.fasta
+python Uracil_5Prime.py ${outpath}Rust_smRNA_Predictions_ShortStack/Results_miRNAs.fasta
 
-python Uracil_5Prime.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results_siRNAs.fasta
-python Uracil_5Prime.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results_miRNAs.fasta
+python Uracil_5Prime.py ${outpath}Wheat_smRNA_Predictions_ShortStack/Results_siRNAs.fasta
+python Uracil_5Prime.py ${outpath}Wheat_smRNA_Predictions_ShortStack/Results_miRNAs.fasta
 
-python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Rust_smRNA_PredictionsShortStack/Results.txt
-python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Wheat_smRNA_PredictionsShortStack/Results.txt
+python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Rust_smRNA_Predictions_ShortStack/Results.txt
+python ShortStack_to_Fasta_FilterCountMatrix.py ${outpath}Wheat_smRNA_Predictions_ShortStack/Results.txt
 cd ../
 ```
 
@@ -88,27 +88,6 @@ cd Scripts
 python ShortStack_EdgeR_Rust.py ${outpath}
 python ShortStack_EdgeR_Wheat.py ${outpath}
 cd ../
-```
-
-##### Prediction of repeats in rust using RepeatModeler 1.0.11 
-```
-BuildDatabase -name chr_A  chr_A.fasta
-RepeatModeler -pa 8 -database chr_A
-BuildDatabase -name chr_B chr_B.fasta
-RepeatModeler -pa 8 -database chr_B
-```
-##### Remove TEs from proteome with Blast+ 2.9.0 and following the procedure in https://blaxter-lab-documentation.readthedocs.io/en/latest/filter-repeatmodeler-library.html. This resulted in filtered RepeatModeler files RepeatModeler_ChrsA_consensi.fa.classified and RepeatModeler_ChrsB_consensi.fa.classified
-
-##### RepeatMasking with Repeatmasker 4.0.6 
-```
-cp /apps/repeatmasker/4.0.6/Libraries/RepeatMaskerLib.embl ${outpath}RepeatMasker_RepeatModeler_ChrsA
-/apps/repeatmasker/4.0.6/util/buildRMLibFromEMBL.pl ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.embl > ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.fasta
-
-cat RepeatModeler_ChrsA_consensi.fa.classified ${outpath}RepeatMasker_RepeatModeler_ChrsA/RepeatMaskerLib.fasta > ${outpath}RepeatMasker_RepeatModeler_ChrsA/PGT_Repeats.fasta
-RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsA/PGT_Repeats.fasta -dir ${outpath}RepeatMasker_RepeatModeler_ChrsA -xsmall -pa 8 /datastore/spe12g/Pgt_21_0_Data/chromosomes/chr_A.fasta
-
-cat RepeatModeler_ChrsB_consensi.fa.classified repeatmasker.eukaryotes.fa > ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta
-RepeatMasker -s -q -lib ${outpath}RepeatMasker_RepeatModeler_ChrsB/PGT_Repeats.fasta -dir ${outpath}RepeatMasker_RepeatModeler_ChrsB -xsmall -pa 8 /datastore/spe12g/Pgt_21_0_Data/chromosomes/chr_B.fasta
 ```
 
 ##### Genomic origins of sRNAs with bedtools 2.28.0
