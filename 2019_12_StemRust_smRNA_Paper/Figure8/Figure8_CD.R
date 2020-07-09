@@ -48,7 +48,6 @@ library(reshape2)
 library(directlabels)
 library(ggpubr)
 #---------------------------------
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure8")
 #---------------------------------
 samples = c('20 nt','21 nt','22 nt', 'Other lengths')
 samples <- as.character(samples)
@@ -171,93 +170,5 @@ png("UpRegulated_5PrimeBases.png", height = 6, width = 18, units = 'in', res = 3
 grid.arrange(g20,g21,g22,ncol=3)
 dev.off()
 #---------------------------------
-#---------------------------------
-#---------------------------------
-# Simple figures for slides
-#---------------------------------
-samples = c('21 nt','22 nt', 'Other lengths')
-samples <- as.character(samples)
 
-lengths_noDE <-     c(47.6, 25.3, 100-sum(c(47.6, 25.3)))
-lengths_upGS <-     c(48.3, 19.6, 100-sum(c(48.3, 19.6)))
-lengths_up_late <-  c(24.2, 43.5, 100-sum(c(24.2, 43.5)))
-
-L21_noDE <- c(15.8, 4.3, 0, 79.9)
-L22_noDE <- c(12.4, 2.5, 0.6, 84.5)
-
-L21_GS   <- c(19.7, 5.1, 1, 74.2)
-L22_GS   <- c(18.4, 2.8, 1.6, 77.2)
-
-L21_late <- c(19.2, 1.7, 0, 79.1)
-L22_late <- c(70.8, 0.4, 0.2, 28.6)
-
-df <- data.frame(samples, lengths_upGS, lengths_up_late)
-df
-
-names(df)[names(df) == "lengths_upGS"] <- "Up-regulated in spores"
-names(df)[names(df) == "lengths_up_late"] <- "Up-regulated in late infection"
-
-mdf <- melt(df)
-head(mdf)
-
-g <- ggplot(mdf, aes(x = variable, y = value, fill=samples)) +
-  geom_bar(stat='identity', width=0.5) +
-  xlab("") +   
-  ylab("% of sequences") +   
-  theme_bw(base_size = 24, base_family = "Helvetica") +
-  theme(legend.title=element_blank(),legend.position="bottom") +
-  coord_flip()
-
-g <- g + scale_fill_Publication() + scale_colour_Publication()
-g
-#---------------------------------
-png("UpRegulated_smRNACluster_Lengths_Simple.png", height = 6, width = 10, units = 'in', res = 300)
-g
-dev.off()
-#---------------------------------
-bases = c('%A', '%C', '%G', '%U')
-bases <- as.character(bases)
-
-df <- data.frame(bases, L22_GS, L22_late)
-head(df)
-names(df)[names(df)=="L22_GS"] <- "Germinated\nspores"
-names(df)[names(df)=="L22_late"] <- "Late\ninfection"
-
-mdf <- melt(df)
-mdf
-
-g <- ggplot(mdf, aes(x = variable, y = value,fill=bases)) +
-  geom_bar(stat='identity', width=0.5) +
-  xlab("") +   
-  ylab("% of sequences") +   
-  theme_bw(base_size = 20, base_family = "Helvetica") +
-  labs(title = "22nt sRNAs") +
-  theme(legend.title=element_blank(),legend.position="bottom") 
-g22 <- g + scale_fill_Publication() + scale_colour_Publication()
-g22
-#---------------------------------
-#---------------------------------
-df <- data.frame(bases, L21_GS, L21_late)
-head(df)
-names(df)[names(df)=="L21_GS"] <- "Germinated\nspores"
-names(df)[names(df)=="L21_late"] <- "Late\ninfection"
-
-mdf <- melt(df)
-mdf
-
-g <- ggplot(mdf, aes(x = variable, y = value,fill=bases)) +
-  geom_bar(stat='identity', width=0.5) +
-  xlab("") +   
-  ylab("% of sequences") +   
-  theme_bw(base_size = 20, base_family = "Helvetica") +
-  labs(title = "21nt sRNAs") +
-  theme(legend.title=element_blank(),legend.position="bottom") 
-g21 <- g + scale_fill_Publication() + scale_colour_Publication()
-g21
-
-#---------------------------------
-#---------------------------------
-png("UpRegulated_5PrimeBases_Simple.png", height = 6, width = 12, units = 'in', res = 300)
-grid.arrange(g21,g22,ncol=2)
-dev.off()
 
