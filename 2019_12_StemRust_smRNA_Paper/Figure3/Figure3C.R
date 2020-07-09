@@ -1,13 +1,8 @@
-#################################################################################################################################################################
-########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure3")
 ########################################################
 library(sem)
-library(pheatmap)
 library(dendextend)
 library(ape)
 library(tidyverse)
-
 
 makeSymm <- function(m) {
   m[upper.tri(m)] <- t(m)[upper.tri(m)]
@@ -24,8 +19,7 @@ m
 full_data <- makeSymm(m)
 head(full_data)
 dim(full_data)
-names <- read.delim(file = "distance_matrix.cran.rows.txt", header = FALSE)
-names
+
 names <- c(
   "chr10A centromere",
   "chr10A non-centromere",
