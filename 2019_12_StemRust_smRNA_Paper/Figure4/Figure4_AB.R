@@ -64,10 +64,6 @@ library("reshape2")
 library(textshape)
 library(pheatmap)
 ########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure4")
-########################################################
-set.seed(42)
-########################################################
 ########################################################
 draw_colnames_45 <- function (coln, gaps, ...) {
   coord <- pheatmap:::find_coordinates(length(coln), gaps)
