@@ -62,10 +62,6 @@ library(RColorBrewer)
 library("ggsignif")
 library("reshape2")
 ########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure11")
-########################################################
-set.seed(42)
-########################################################
 ########################################################
 # Now look at methylated repeats and nearby genes
 ########################################################
