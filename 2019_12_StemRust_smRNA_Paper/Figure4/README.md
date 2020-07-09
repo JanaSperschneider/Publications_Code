@@ -1,1 +1,3 @@
-#### Figure 4: (A) Sequence lengths and (B) 5‘ nucleotide distribution of Pgt sRNAs.
+#### Figure 4
+
+Properties of repetitive elements in the centromeres
