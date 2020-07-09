@@ -1,1 +1,3 @@
-#### Figure 9: Expression levels (log-normalized transcripts for million) for genes in each bin of increasing distance from the nearest TE that is predicted to be either targeted by a Pgt sRNA or not. 
+#### Figure 9: 
+
+Transcription levels of sRNAs on the Pgt chromosomes.
