@@ -7,9 +7,6 @@ library(seqinr)
 library(SeqinR)
 library(biomartr)
 library(BSgenome)
-set.seed(42)
-########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure3/")
 ########################################################
 ########################################################
 # Read in the data
@@ -27,15 +24,9 @@ custom.genome <- toGRanges(data.frame(chr=c("chr1A", "chr2A", "chr3A", "chr4A", 
                                             4975925, 4948285, 3939593, 3305433, 3562274, 3444477, 5892386, 2935969, 3060192
                                       )))
 ################################
-all.genes.expressed <- toGRanges("../ExpressedGenes_KaryoplotR.txt")
-head(all.genes.expressed)
-
-repeats <- toGRanges("../chrs_repet_no_SSR.bed")
-head(repeats)
+centromeres <- readBed("centromeres.bed", track.line = FALSE, remove.unusual = FALSE, zero.based = TRUE)
 ################################
-centromeres <- readBed("../centromeres.bed", track.line = FALSE, remove.unusual = FALSE, zero.based = TRUE)
-################################
-synteny <- read.delim("../map_chr_B_to_chr_A.primary_alignments.bed", header=FALSE)
+synteny <- read.delim("map_chr_B_to_chr_A.primary_alignments.bed", header=FALSE)
 head(synteny)
 
 synteny.filtered <- subset(synteny, synteny$V3-synteny$V2 > 20000 & synteny$V6-synteny$V5 > 20000)
