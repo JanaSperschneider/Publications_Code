@@ -15,7 +15,6 @@ library(scales)
 library(ggsignif)
 library(reshape2)
 #---------------------------------
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure5")
 #---------------------------------
 #---------------------------------
 #---------------------------------
