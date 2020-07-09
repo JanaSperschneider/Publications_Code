@@ -1,1 +1,3 @@
-#### Figure 8: Properties of Pgt centromeric regions. 
+#### Figure 8: 
+
+Pgt sRNA differentially expression analysis.
