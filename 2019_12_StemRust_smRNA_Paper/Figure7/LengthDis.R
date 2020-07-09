@@ -46,8 +46,6 @@ library(reshape2)
 library(lattice)
 library(ggrepel)
 
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure7")
-
 samples = c(18,19,20,21,22,23,24,25,26,27,28)
 samples <- as.character(samples)
 
@@ -57,7 +55,7 @@ Wheat_most_abundant_in_cluster = c(0.0 , 0.0 , 9.0 , 49.9 , 14.8 , 3.9 , 22.4 , 
 PGT_reads_in_clusters = c(3.3 , 8.8 , 23.7 , 26.2 , 25.4 , 9.0 , 1.7 , 0.7 , 0.5 , 0.4 , 0.4)
 Wheat_reads_in_clusters = c(8.5 , 14.8 , 13.1 , 29.4 , 11.4 , 6.6 , 11.4 , 1.7 , 0.7 , 1.5 , 0.7)
 
-df <- data.frame(PGT_most_abundant_in_cluster, PGT_reads_in_clusters,Wheat_most_abundant_in_cluster,Wheat_reads_in_clusters,
+df <- data.frame(PGT_most_abundant_in_cluster, PGT_reads_in_clusters, Wheat_most_abundant_in_cluster, Wheat_reads_in_clusters,
                  samples=c(samples))
 
 head(df)
@@ -108,44 +106,4 @@ png("ReadDistribution.png", height = 6, width = 14, units = 'in', res = 300)
 grid.arrange(g1, g2, ncol=2)
 dev.off()
 #---------------------------------
-g1 <- ggplot(df, aes(x=samples, group=1)) + 
-  geom_line(aes(y = PGT_most_abundant_in_cluster, size=0.4)) + 
-  geom_point(aes(y = PGT_most_abundant_in_cluster, size=0.8)) + 
-  scale_y_continuous(name="% of sequences", labels = comma) + 
-  xlab("Sequence length") +   
-  theme_bw(base_size = 18, base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),panel.grid.major.y = element_blank()) +  
-  theme(legend.title=element_blank()) +
-  theme(legend.position="none", legend.direction="vertical") +
-  guides(fill = guide_legend(override.aes = list(colour = NULL))) +
-  guides(fill = guide_legend(override.aes = list(size = NULL))) +
-  labs(title = "Rust sRNAs") 
 
-g1 <- g1 + scale_fill_Publication() + scale_colour_Publication()
-g1 <- g1 + guides(size = FALSE)
-g1
-
-g2 <- ggplot(df, aes(x=samples, group=1)) + 
-  geom_line(aes(y = Wheat_most_abundant_in_cluster, size=0.4)) +
-  geom_point(aes(y = Wheat_most_abundant_in_cluster, size=0.8)) +
-  scale_y_continuous(name="% of sequences", labels = comma) + 
-  xlab("Sequence length") +   
-  theme_bw(base_size = 18, base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),panel.grid.major.y = element_blank()) +  
-  theme(legend.title=element_blank()) +
-  theme(legend.position="none", legend.direction="vertical") +
-  guides(fill = guide_legend(override.aes = list(colour = NULL))) +
-  guides(fill = guide_legend(override.aes = list(size = NULL))) +
-  labs(title = "Wheat sRNAs") 
-
-g2 <- g2 + scale_fill_Publication() + scale_colour_Publication()
-g2 <- g2 + guides(size = FALSE)
-g2
-#---------------------------------
-#---------------------------------
-#---------------------------------
-require(gridExtra)
-#---------------------------------
-png("ReadDistribution_Simple.png", height = 6, width = 14, units = 'in', res = 300)
-grid.arrange(g1, g2, ncol=2)
-dev.off()
