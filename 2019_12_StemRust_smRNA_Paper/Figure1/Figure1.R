@@ -9,8 +9,6 @@ library(karyoploteR)
 library(GenomicFeatures)
 set.seed(42)
 ########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure1")
-########################################################
 ########################################################
 # Read in the data
 ########################################################
@@ -90,7 +88,7 @@ centromeres <- toGRanges(
                "Centromere", "Centromere",
                "Centromere", "Centromere")))
 ########################################################
-RNAseq_7dpi_coverage <- read.delim("../WI7_RNAseq_salignments.readcounts.bed", header=FALSE)
+RNAseq_7dpi_coverage <- read.delim("WI7_RNAseq_alignments.readcounts.bed", header=FALSE)
 WI7_RPMs <- RNAseq_7dpi_coverage
 WI7_RPMs[4] <- apply(WI7_RPMs[4],2,function(x){1000000*x/sum(x)})
 head(WI7_RPMs)
@@ -98,7 +96,7 @@ WI7_RPMs <- WI7_RPMs[WI7_RPMs$V4 < 100,]
 WI7_RPMs <- toGRanges(data.frame(chr=WI7_RPMs$V1, start=WI7_RPMs$V2, end=WI7_RPMs$V3, y=WI7_RPMs$V4))
 WI7_RPMs
 
-RNAseq_GS_coverage <- read.delim("../GS_RNAseq_alignments.readcounts.bed", header=FALSE)
+RNAseq_GS_coverage <- read.delim("GS_RNAseq_alignments.readcounts.bed", header=FALSE)
 GS_RPMs <- RNAseq_GS_coverage
 GS_RPMs[4] <- apply(GS_RPMs[4],2,function(x){1000000*x/sum(x)})
 head(GS_RPMs)
@@ -122,8 +120,6 @@ custom.genome_haplotypeB <- toGRanges(data.frame(chr=c("chr1B", "chr2B", "chr3B"
                                                        4975925, 4948285, 3939593, 3305433, 3562274, 3444477, 5892386, 2935969, 3060192
                                                  )))
 ################################
-png("Chromosome_TranscriptionLevels_HaplotypeA.png", height = 20, width = 20, units = 'in', res = 300)
-
 kp <- plotKaryotype(genome = custom.genome_haplotypeA, plot.type=2, cex=2.0)#, zoom=zoom.region)
 
 kpPlotRibbon(kp, data=WI7_RPMs, ymin=0, ymax=100, y1=WI7_RPMs$V4, data.panel=1,
@@ -133,11 +129,7 @@ kpPlotRibbon(kp, data=GS_RPMs, ymin=0, ymax=100, y1=GS_RPMs$V4, data.panel=2,
              border="darkgreen", col="darkgreen")
 
 kpPlotMarkers(kp, data=centromeres, labels=centromeres$labels, label.color = "darkblue", r1=1.5, text.orientation="horizontal", line.with=3)
-
-dev.off()
 ################################
-png("Chromosome_TranscriptionLevels_HaplotypeB.png", height = 20, width = 20, units = 'in', res = 300)
-
 kp <- plotKaryotype(genome = custom.genome_haplotypeB, plot.type=2, cex=2.0)#, zoom=zoom.region)
 
 kpPlotRibbon(kp, data=WI7_RPMs, ymin=0, ymax=100, y1=WI7_RPMs$V4, data.panel=1,
@@ -147,5 +139,3 @@ kpPlotRibbon(kp, data=GS_RPMs, ymin=0, ymax=100, y1=GS_RPMs$V4, data.panel=2,
              border="darkgreen", col="darkgreen")
 
 kpPlotMarkers(kp, data=centromeres, labels=centromeres$labels, label.color = "darkblue", r1=1.5, text.orientation="horizontal", line.with=3)
-
-dev.off()
