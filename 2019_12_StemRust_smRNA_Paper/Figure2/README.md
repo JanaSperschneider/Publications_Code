@@ -1,3 +1,3 @@
 #### Figure 2
 
-Code to generate plots that show sequence length distributions of predicted sRNAs in (A) rust and (B) wheat. 
+Code to generate properties of Pgt centromeric regions for two selected chromosomes
