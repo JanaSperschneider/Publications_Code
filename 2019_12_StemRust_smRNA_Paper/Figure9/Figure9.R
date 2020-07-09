@@ -1,10 +1,4 @@
 #################################################################################################################################################################
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#  install.packages("BiocManager")
-
-#BiocManager::install("karyoploteR")
-#BiocManager::install("GenomicFeatures")
-
 library(karyoploteR)
 library(genomation)
 library(GenomicFeatures)
@@ -13,9 +7,7 @@ library(seqinr)
 library(SeqinR)
 library(biomartr)
 library(BSgenome)
-set.seed(42)
 ########################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure9")
 ########################################################
 ########################################################
 # Read in the data
@@ -34,9 +26,9 @@ custom.genome_haplotypeB <- toGRanges(data.frame(chr=c("chr1B", "chr2B", "chr3B"
                                                  )))
 
 ########################################################
-centromeres <- readBed("../centromeres.bed", track.line = FALSE, remove.unusual = FALSE, zero.based = TRUE)
+centromeres <- readBed("centromeres.bed", track.line = FALSE, remove.unusual = FALSE, zero.based = TRUE)
 
-WI7coverage <- read.delim("../WI7_alignments.readcounts.bed", header=FALSE)
+WI7coverage <- read.delim("WI7_alignments.readcounts.bed", header=FALSE)
 WI7_RPMs <- WI7coverage
 WI7_RPMs_scaled <- WI7_RPMs[4]*0.171953
 WI7_RPMs[4] <- WI7_RPMs_scaled
@@ -45,7 +37,7 @@ WI7_RPMs <- WI7_RPMs[WI7_RPMs$V4 < 1000,]
 WI7_RPMs <- toGRanges(data.frame(chr=WI7_RPMs$V1, start=WI7_RPMs$V2, end=WI7_RPMs$V3, y=WI7_RPMs$V4))
 WI7_RPMs
 
-GScoverage <- read.delim("../GS_alignments.readcounts.bed", header=FALSE)
+GScoverage <- read.delim("GS_alignments.readcounts.bed", header=FALSE)
 GS_RPMs <- GScoverage
 GS_RPMs_scaled <- GS_RPMs[4]*0.036315
 GS_RPMs[4] <- GS_RPMs_scaled
