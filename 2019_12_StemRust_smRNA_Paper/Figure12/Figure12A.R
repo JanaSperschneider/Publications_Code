@@ -3,7 +3,6 @@ library(ggplot2)
 library(pheatmap)
 library(RColorBrewer)
 ########################################################################################
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure12")
 ########################################################################################
 ########################################################################################
 tpms = read.delim(file = "Tx2_Abundance.txt", 
