@@ -1,3 +1,3 @@
 #### Figure 1
 
-This R script generates Figure 1 of the manuscript: A heatmap of Pgt 21-0 RNAi gene expression.
+This R script generates Figures 1 and S4 of the manuscript: Hi-C contact map shows the location of the Pgt centromeres.
