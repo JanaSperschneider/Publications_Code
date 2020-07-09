@@ -46,7 +46,6 @@ library(reshape2)
 library(lattice)
 library(ggrepel)
 #--------------------------------------------------------------
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure5")
 #--------------------------------------------------------------
 dinucleotides = c('CA', 'CC', 'CG', 'CT')
 #---------------------------------
