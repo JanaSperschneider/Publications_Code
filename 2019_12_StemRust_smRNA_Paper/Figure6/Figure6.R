@@ -56,9 +56,7 @@ scale_colour_Publication <- function(...){
 #################################################################################################################################################################
 library(ggplot2)
 library(reshape2)
-setwd("H:/ANU/InProgress/Project_Pgt_smRNA_V2/Figures_Revision/Figure6")
 #################################################################################################################################################################
-
 df <- data.frame(methylation <- c("Germinated\nspores", "Late\ninfection"),
   young_TEs_centromeres <- c(21.24, 25.07),
   young_TEs_not_in_centromeres <- c(23.64, 23.62),
