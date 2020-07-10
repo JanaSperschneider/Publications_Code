@@ -92,62 +92,25 @@ cd ../
 
 ##### Genomic origins of sRNAs with bedtools 2.28.0
 ```
-# Turn the gene annotation file into bed file format
-awk -F'\t' -v OFS='\t' 'NR>=2{ if ($3 == "gene") { print } }' Puccinia_graminis_tritici_21-0.gff3 | awk '{print $1 "\t" $4 "\t" $5 "\t" $9 "\t" 0 "\t" $7}' > Puccinia_graminis_tritici_21-0.bed
-sortBed -i Puccinia_graminis_tritici_21-0.bed > Puccinia_graminis_tritici_21-0.sorted.bed
+repeats="REPET/chrs_repet_no_SSR.bed"
+genes="GeneAnnotation/Puccinia_graminis_tritici_21-0.sorted.bed"
 
-# Turn the repeat annotation file from RepeatMasker into bed file format
-cat chr_A_B.fasta.out | awk '{print $5 "\t" $6 "\t" $7 "\t" $10 "\t" $11}' > chr_A_B.fasta.out.bed
-awk -F'\t' -v OFS='\t' 'NR>=3{sub(/_/, "", $1)} 1' chr_A_B.fasta.out.bed | tail -n+4 > f1.txt
-sortBed -i f1.txt > chr_A_B.fasta.out.sorted.bed
-rm f1.txt
+# Set the overlap thresholds for smRNAs mapping to gene/repeats
+a_overlap=0.33
+# sRNAs overlapping/containing repeats/genes
+#-f 	Minimum overlap required as a fraction of A
+#-F 	Minimum overlap required as a fraction of B
+declare -a StringArray=("smRNAs_upSpores" "smRNAs_up_early_infection" "smRNAs_up_late_infection" "smRNAs_noDE")
+echo 
+echo "---------------------"
+for val in "${StringArray[@]}"; do
+	echo 'smRNAs overlapping with repeats/genes'
+	echo $val
 
-# Turn the sRNAs locations into bed file format
-grep '>' ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta > smRNAs_up_late_infection.IDs
-cat smRNAs_up_late_infection.IDs | cut -d ':' -f3,4 | cut -d '|' -f1 | sed 's/:/\t/g' | sed 's/-/\t/g' > smRNAs_up_late_infection.bed
-sortBed -i smRNAs_up_late_infection.bed > smRNAs_up_late_infection.sorted.bed
-grep '>' ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_upSpores.fasta > smRNAs_upSpores.IDs
-cat smRNAs_upSpores.IDs | cut -d ':' -f3,4 | cut -d '|' -f1 | sed 's/:/\t/g' | sed 's/-/\t/g' > smRNAs_upSpores.bed
-sortBed -i smRNAs_upSpores.bed > smRNAs_upSpores.sorted.bed
-grep '>' ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_noDE.fasta > smRNAs_noDE.IDs
-cat smRNAs_noDE.IDs | cut -d ':' -f3,4 | cut -d '|' -f1 | sed 's/:/\t/g' | sed 's/-/\t/g' > smRNAs_noDE.bed
-sortBed -i smRNAs_noDE.bed > smRNAs_noDE.sorted.bed
-grep '>' ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_early_infection.fasta > smRNAs_up_early_infection.IDs
-cat smRNAs_up_early_infection.IDs | cut -d ':' -f3,4 | cut -d '|' -f1 | sed 's/:/\t/g' | sed 's/-/\t/g' > smRNAs_up_early_infection.bed
-sortBed -i smRNAs_up_early_infection.bed > smRNAs_up_early_infection.sorted.bed
+	bedtools intersect -nonamecheck -f $a_overlap -a smRNA_Locations/${val}.sorted.bed -b ${repeats} -wo > smRNA_Locations/${val}_repeats_overlapping.bed
+	bedtools intersect -nonamecheck -f $a_overlap -a smRNA_Locations/${val}.sorted.bed -b ${genes} -wo > smRNA_Locations/${val}_genes_overlapping.bed
 
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_up_late_infection_repeats_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_upSpores_repeats_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_up_early_infection_repeats_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo > smRNAs_noDE_repeats_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b chr_A_B.fasta.out.sorted.bed -wo | awk '{print $8}' | sort | uniq -c | sort -g
-
-# sRNAs overlapping/containing genes 
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo > smRNAs_upSpores_genes_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_upSpores.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-cat smRNAs_upSpores_genes_overlapping.bed | awk '{print $7}' | uniq | sed 's/ID=//g' | cut -d ';' -f1 > smRNAs_upSpores_genes_overlapping.gene.IDs
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo > smRNAs_up_late_infection_genes_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_late_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-cat smRNAs_up_late_infection_genes_overlapping.bed | awk '{print $7}' | uniq | sed 's/ID=//g' | cut -d ';' -f1 > smRNAs_up_late_infection_genes_overlapping.gene.IDs
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo > smRNAs_up_early_infection_genes_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_up_early_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-cat smRNAs_up_early_infection_genes_overlapping.bed | awk '{print $7}' | uniq | sed 's/ID=//g' | cut -d ';' -f1 > smRNAs_up_early_infection_genes_overlapping.gene.IDs
-
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo > smRNAs_noDE_genes_overlapping.bed
-bedtools intersect -nonamecheck -f 0.25 -F 0.25 -a smRNAs_noDE.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed -wo | awk '{print $1 "\t" $2 "\t" $3}' | uniq | wc -l
-cat smRNAs_noDE_genes_overlapping.bed | awk '{print $7}' | uniq | sed 's/ID=//g' | cut -d ';' -f1 > smRNAs_noDE_genes_overlapping.gene.IDs
+done
 ```
 
 ##### Analysis of homologous sRNA loci in rust
@@ -160,37 +123,6 @@ python Homologous_sRNAs.py smRNAs_noDE.fasta
 cd ../
 ```
 
-##### Get the chromosome locations for the sRNAs, so that they can be plotted onto the chromosomes (used in Figures 6 and 8)
-```
-cd Scripts
-python KaryplotR_Repeats.py
-python KaryplotR_Genes.py
-python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_up_early_infection.fasta
-python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta
-python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_upSpores.fasta
-python KaryplotR_smRNAs.py ${outpath}Rust_smRNA_PredictionsShortStack/smRNAs_noDE.fasta
-cd ../
-```
+##### 
 
-##### Figure 9: TEs targeted by sRNAs are associated with reduced expression of overlapping genes using bowtie 1.1.2
-```
-bowtie -f -v0 -a --best --strata --sam chr_A_B_unassigned ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.fasta ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sam
-sam2bed < ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sam > ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.bed
-# Bed file of the sRNA mappings back to the genome
-sortBed -i ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.bed > ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sorted.bed
-cat ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.sorted.bed | awk '{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" 0 "\t" $6}' > ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.bed
 
-# Get the repeats that do and don't overlap with sRNAs
-bedtools intersect -nonamecheck -a chr_A_B.fasta.out.sorted.bed -b ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.bed -wo > ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection_repeats_overlapping.bed
-bedtools intersect -nonamecheck -v -a chr_A_B.fasta.out.sorted.bed -b ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection.bed -wo > ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection_repeats_not_overlapping.bed
-
-# Now get the repeats 
-cat ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection_repeats_overlapping.bed | awk '{print $1 "\t" $2 "\t" $3 "\t" $4}' > ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_overlapping_smRNAs_up_late_infection.bed
-sortBed -i ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_overlapping_smRNAs_up_late_infection.bed > ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_overlapping_smRNAs_up_late_infection.sorted.bed
-cat ${outpath}/Rust_smRNA_PredictionsShortStack/smRNAs_up_late_infection_repeats_not_overlapping.bed | awk '{print $1 "\t" $2 "\t" $3 "\t" $4}' > ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_not_overlapping_smRNAs_up_late_infection.bed
-sortBed -i ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_not_overlapping_smRNAs_up_late_infection.bed > ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_not_overlapping_smRNAs_up_late_infection.sorted.bed
-
-# Now get the genes that overlap with those repeats
-bedtools closest -nonamecheck -d -a ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_overlapping_smRNAs_up_late_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed > repeats_overlapping_smRNAs_up_late_infection_closest_genes.bed
-bedtools closest -nonamecheck -d -a ${outpath}/Rust_smRNA_PredictionsShortStack/repeats_not_overlapping_smRNAs_up_late_infection.sorted.bed -b Puccinia_graminis_tritici_21-0.sorted.bed > repeats_not_overlapping_smRNAs_up_late_infection_closest_genes.bed
-```
