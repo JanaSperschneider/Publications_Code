@@ -37,7 +37,7 @@ trim_galore --paired Rust_RNAseq/Sample_Nmu_PGTGS_3/Nmu_PGTGS_3_ATGTCA_L005_R1_0
 ###### Align against transcripts with Salmon
 
 ```
-salmon index -t Puccinia_graminis_tritici_21-0.transcripts.fa -i SalmonIndex/PGT_210_AGO_Fixed
+salmon index --keepDuplicates -t Puccinia_graminis_tritici_21-0.transcripts.fa -i SalmonIndex/PGT_210_AGO_Fixed
 
 for fn in Rust_RNAseq/cutadapt/*.fastq.gz
 do
